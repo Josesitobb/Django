@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
-from django.shortcuts import get_object_or_404 , render
+from django.shortcuts import get_object_or_404 , render ,redirect
+
+from .forms import CreateNewTask
 # BASE DE DATOS
 from .models import Project, Task
 
@@ -33,4 +35,22 @@ def tasks(request):
     # task = Task.objects.get(id=id)
     # task = get_object_or_404(Task, id=id)
     # return HttpResponse(f"Task : {task.title}")
-    return render(request, 'tasks.html')
+    task = Task.objects.all()
+    return render(request, 'tasks.html',{
+        'task': task
+    })
+
+def create_task(request):
+   if request.method == 'GET':
+      return render(request, 'create_task.html',{
+        'form': CreateNewTask()
+    })
+   else:
+    Task.objects.create(title=request.POST['title'], description=request.POST['description'],project_id=2)
+    return redirect('/tasks/')
+
+
+
+
+
+  
